@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Equipamento{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h2 class="h5 mb-0">Editar Equipamento: {{ equipamento['nome_equipamento'] }}</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome do Equipamento</label>
+                        <input type="text" class="form-control" id="nome" name="nome_equipamento" 
+                               value="{{ equipamento['nome_equipamento'] }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição (Opcional)</label>
+                        <textarea class="form-control" id="descricao" name="descricao_equipamento" rows="3">{{ equipamento['descricao_equipamento'] }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantidade" class="form-label">Quantidade em Estoque</label>
+                        <input type="number" class="form-control" id="quantidade" name="quantidade_estoque" 
+                               value="{{ equipamento['quantidade_estoque'] }}" required min="0">
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ url_for('listar_equipamentos') }}" class="btn btn-secondary me-2">Cancelar</a>
+                        <button type="submit" class="btn btn-warning">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

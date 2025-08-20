@@ -75,3 +75,46 @@ def listar_equipamentos():
     finally:
         if conn:
             conn.close()
+            
+def excluir_equipamento(id_equipamento):
+    try:
+        conn = conectar()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM equipamentos WHERE id_equipamento = ?", (id_equipamento,))
+        conn.commit()
+    except sqlite3.Error as e:
+        print(f"Erro ao excluir equipamento: {e}")
+    finally:
+        if conn:
+            conn.close()
+
+def listar_um_equipamento(id_equipamento):
+    try:
+        conn = conectar()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM equipamentos WHERE id_equipamento = ?", (id_equipamento,))
+        equipamento = cursor.fetchone()
+        return equipamento
+    except sqlite3.Error as e:
+        print(f"Erro ao obter equipamento: {e}")
+        return None
+    finally:
+        if conn:
+            conn.close()
+        
+def atualizar_equipamento(id_equipamento, nome, descricao, quantidade):
+    try:
+        conn = conectar()
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE equipamentos
+            SET nome_equipamento = ?, descricao_equipamento = ?, quantidade_estoque = ?
+            WHERE id_equipamento = ?
+        ''', (nome, descricao, quantidade, id_equipamento))
+        conn.commit()
+    except sqlite3.Error as e:
+        print(f"Erro ao atualizar equipamento: {e}")
+    finally:
+        if conn:
+            conn.close()

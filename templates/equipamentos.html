@@ -1,21 +1,14 @@
-<!-- Em templates/equipamentos.html -->
-
-<!-- Diz que este arquivo herda tudo de base.html -->
 {% extends 'base.html' %}
 
-<!-- Define um título específico para esta página -->
 {% block title %}Lista de Equipamentos{% endblock %}
 
-<!-- Coloca todo o conteúdo a seguir dentro do 'block content' do base.html -->
 {% block content %}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>Equipamentos Cadastrados</h1>
-        <!-- Botão estilizado pelo Bootstrap -->
         <a href="{{ url_for('novo_equipamento') }}" class="btn btn-primary">Adicionar Novo Equipamento</a>
     </div>
     <hr>
 
-    <!-- Tabela com classes do Bootstrap para um visual moderno -->
     <table class="table table-striped table-hover">
         <thead class="table-dark">
             <tr>
@@ -24,6 +17,7 @@
                 <th>Descrição</th>
                 <th>Qtd. em Estoque</th>
                 <th>Data de Cadastro</th>
+                <th class="text-center">Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -34,11 +28,19 @@
                 <td>{{ equipamento['descricao_equipamento'] }}</td>
                 <td>{{ equipamento['quantidade_estoque'] }}</td>
                 <td>{{ equipamento['data_cadastro'] }}</td>
+                <td class="text-center">
+                    <a href="{{ url_for('editar_equipamento', id_equipamento=equipamento['id_equipamento']) }}" class="btn btn-warning btn-sm">Editar</a>
+                    <form action="{{ url_for('excluir_equipamento_rota', id_equipamento=equipamento['id_equipamento']) }}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm" 
+                                onclick="return confirm('Tem certeza que deseja excluir este equipamento?')">
+                            Excluir
+                        </button>
+                    </form>
+                </td>
             </tr>
             {% else %}
             <tr>
-                <!-- Mensagem que ocupa todas as colunas -->
-                <td colspan="5" class="text-center">Nenhum equipamento cadastrado.</td>
+                <td colspan="6" class="text-center">Nenhum equipamento cadastrado.</td>
             </tr>
             {% endfor %}
         </tbody>
