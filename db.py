@@ -61,10 +61,17 @@ def adicionar_equipamento(nome, descricao, quantidade):
             conn.close()
             
 def listar_equipamentos():
-    conn = conectar()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM equipamentos ORDER BY nome_equipamento")
-    res = cursor.fetchall()
-    conn.close()
-    return res
-        
+    conn = None
+    try:
+        conn = conectar()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM equipamentos ORDER BY nome_equipamento")
+        res = cursor.fetchall()
+        return res
+    except sqlite3.Error as e:
+        print(f"Erro ao listar equipamentos: {e}")
+        return [] 
+    finally:
+        if conn:
+            conn.close()
