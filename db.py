@@ -203,3 +203,18 @@ def atualizar_usuario(id_usuario, nome, email, senha, cargo, nivel_acesso):
     finally:
         if conn:
             conn.close()
+            
+def obter_usuario_por_email(email):
+    try:
+        conn = conectar()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM usuarios WHERE email = ?", (email,))
+        usuario = cursor.fetchone()
+        return usuario
+    except sqlite3.Error as e:
+        print(f"Erro ao obter usuário por email: {e}")
+        return None
+    finally:
+        if conn:
+            conn.close()
