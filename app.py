@@ -21,8 +21,11 @@ with app.app_context():
     database.criar_tabelas()
 
 @app.route('/')
-def hello():
-    return redirect(url_for('listar_equipamentos'))
+@login_required
+def dashboard():
+    estatisticas = database.obter_estatisticas()
+    ultimas_movimentacoes = database.listar_ultimas_movimentacoes()
+    return render_template('dashboard.html', stats=estatisticas, ultimas_movimentacoes=ultimas_movimentacoes)
 
 # --- ROTA DE LOGIN
 @app.route('/login', methods=['GET', 'POST'])
@@ -38,7 +41,7 @@ def login():
                 session['user_id'] = usuario['id_usuario']
                 session['user_name'] = usuario['nome_usuario']
                 flash(f"Bem-vindo, {usuario['nome_usuario']}!", 'success')
-                return redirect(url_for('listar_equipamentos'))
+                return redirect(url_for('dashboard'))
             else:
                 flash('Email ou senha inválidos.', 'danger')
 

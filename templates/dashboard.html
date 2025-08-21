@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Principal{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Dashboard</h1>
+        <a href="{{ url_for('registrar_retirada') }}" class="btn btn-primary btn-lg">
+            + Registrar Nova Retirada
+        </a>
+    </div>
+
+    <!-- Cards de Estatísticas -->
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-primary shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Equipamentos em Uso</h5>
+                    <p class="card-text display-4">{{ stats.em_uso }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-success shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Total de Equipamentos</h5>
+                    <p class="card-text display-4">{{ stats.total_equipamentos }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-info shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Usuários Cadastrados</h5>
+                    <p class="card-text display-4">{{ stats.total_usuarios }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acessos Rápidos e Últimas Atividades -->
+    <div class="row">
+        <!-- Coluna da Esquerda: Acessos Rápidos -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">Acessos Rápidos</h2>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('listar_movimentacoes') }}" class="list-group-item list-group-item-action">Painel de Movimentações</a>
+                    <a href="{{ url_for('listar_equipamentos') }}" class="list-group-item list-group-item-action">Gerenciar Equipamentos</a>
+                    <a href="{{ url_for('listar_usuarios') }}" class="list-group-item list-group-item-action">Gerenciar Usuários</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna da Direita: Últimas Atividades -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">Últimas Atividades</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm table-hover">
+                        <tbody>
+                            {% for mov in ultimas_movimentacoes %}
+                            <tr>
+                                <td>
+                                    {% if mov.tipo_movimentacao == 'Retirada' %}
+                                        <span class="badge bg-warning text-dark">Retirada</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Devolução</span>
+                                    {% endif %}
+                                </td>
+                                <td><strong>{{ mov.nome_equipamento }}</strong> por {{ mov.nome_usuario }}</td>
+                                <td class="text-end text-muted">{{ mov.data_ordenacao.strftime('%d/%m/%Y %H:%M') }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td class="text-center">Nenhuma atividade recente.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
