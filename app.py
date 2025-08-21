@@ -150,5 +150,42 @@ def excluir_usuario_rota(id_usuario):
     flash('Usuário excluído com sucesso!', 'success')
     return redirect(url_for('listar_usuarios'))
 
+# --- ROTAS DE MOVIMENTAÇÕES ---
+
+@app.route('/movimentacoes')
+@login_required
+def listar_movimentacoes():
+    movimentacoes_abertas = database.listar_movimentacoes_abertas()
+    return render_template('movimentacoes.html', movimentacoes=movimentacoes_abertas)
+
+@app.route('/movimentacoes/retirada', methods=['GET', 'POST'])
+@login_required
+def registrar_retirada():
+    if request.method == 'POST':
+        id_equipamento = request.form['id_equipamento']
+        id_usuario = request.form['id_usuario']
+        quantidade = int(request.form['quantidade_retirada'])
+        observacao = request.form['observacao']
+
+        equipamento = database.obter_equipamento_por_id(id_equipamento)
+        if equipamento and quantidade > equipamento['quantidade_estoque']:
+            flash(f"Erro: Quantidade de retirada ({quantidade}) é maior que o estoque disponível ({equipamento['quantidade_estoque']}).", 'danger')
+            return redirect(url_for('registrar_retirada'))
+
+        database.registrar_retirada(id_equipamento, id_usuario, quantidade, observacao)
+        flash('Retirada registrada com sucesso!', 'success')
+        return redirect(url_for('listar_movimentacoes'))
+
+    equipamentos = database.listar_equipamentos()
+    usuarios = database.listar_usuarios()
+    return render_template('registrar_retirada.html', equipamentos=equipamentos, usuarios=usuarios)
+
+@app.route('/movimentacoes/devolver/<int:id_movimentacao>', methods=['POST'])
+@login_required
+def registrar_devolucao_rota(id_movimentacao):
+    database.registrar_devolucao(id_movimentacao)
+    flash('Devolução registrada com sucesso!', 'success')
+    return redirect(url_for('listar_movimentacoes'))
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

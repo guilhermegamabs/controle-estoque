@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar Nova Retirada{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h5 mb-0">Registrar Nova Retirada de Equipamento</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <!-- Campo de Seleção de Equipamento -->
+                    <div class="mb-3">
+                        <label for="id_equipamento" class="form-label">Equipamento</label>
+                        <select class="form-select" id="id_equipamento" name="id_equipamento" required>
+                            <option value="" disabled selected>Selecione um equipamento...</option>
+                            {% for eq in equipamentos %}
+                                {% if eq['quantidade_estoque'] > 0 %}
+                                    <option value="{{ eq['id_equipamento'] }}">
+                                        {{ eq['nome_equipamento'] }} (Estoque: {{ eq['quantidade_estoque'] }})
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Campo de Seleção de Usuário -->
+                    <div class="mb-3">
+                        <label for="id_usuario" class="form-label">Técnico Responsável</label>
+                        <select class="form-select" id="id_usuario" name="id_usuario" required>
+                            <option value="" disabled selected>Selecione um técnico...</option>
+                            {% for user in usuarios %}
+                                <option value="{{ user['id_usuario'] }}">{{ user['nome_usuario'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Campo Quantidade -->
+                    <div class="mb-3">
+                        <label for="quantidade_retirada" class="form-label">Quantidade a ser Retirada</label>
+                        <input type="number" class="form-control" id="quantidade_retirada" name="quantidade_retirada" required min="1" value="1">
+                    </div>
+
+                    <!-- Campo Observações -->
+                    <div class="mb-3">
+                        <label for="observacao" class="form-label">Observações (Opcional)</label>
+                        <textarea class="form-control" id="observacao" name="observacao" rows="3"></textarea>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ url_for('listar_movimentacoes') }}" class="btn btn-secondary me-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Confirmar Retirada</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}```
+
+#### Passo 4: Atualizar o Link no Painel de Movimentações
+
+Finalmente, vamos fazer o botão "Registrar Nova Retirada" na página principal de movimentações funcionar.
+
+**Modifique o arquivo `templates/movimentacoes.html`:**
+
+```html
+<!-- Em templates/movimentacoes.html -->
+
+<!-- DE: <a href="#" class="btn btn-primary">Registrar Nova Retirada</a> -->
+<!-- PARA: -->
+<a href="{{ url_for('registrar_retirada') }}" class="btn btn-primary">Registrar Nova Retirada</a>

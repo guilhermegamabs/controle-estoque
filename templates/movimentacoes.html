@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel de Movimentações{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Painel de Movimentações</h1>
+        <a href="{{ url_for('registrar_retirada') }}" class="btn btn-primary">Registrar Nova Retirada</a>
+    </div>
+    <hr>
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Equipamentos Atualmente em Uso</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Equipamento</th>
+                        <th>Quantidade</th>
+                        <th>Retirado por</th>
+                        <th>Data da Retirada</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mov in movimentacoes %}
+                    <tr>
+                        <td>{{ mov['nome_equipamento'] }}</td>
+                        <td>{{ mov['quantidade_retirada'] }}</td>
+                        <td>{{ mov['nome_usuario'] }}</td>
+                        <td>{{ mov['data_retirada'] }}</td>
+                        <td class="text-center">
+                            <form action="{{ url_for('registrar_devolucao_rota', id_movimentacao=mov['id_movimentacao']) }}" method="POST">
+                            <button type="submit" class="btn btn-success btn-sm">Registrar Devolução</button>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">Nenhum equipamento em uso no momento.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
