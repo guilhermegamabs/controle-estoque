@@ -5,60 +5,65 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
-
         <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h2 class="h5 mb-0">Cadastrar Novo Usuário</h2>
+            <div class="card-header">
+                <h2 class="h5 mb-0"><i class="bi bi-person-plus-fill"></i> Cadastrar Novo Usuário</h2>
             </div>
             <div class="card-body">
                 <form method="POST">
-                    <!-- Campo Nome do Usuário -->
-                    <div class="mb-3">
-                        <label for="nome_usuario" class="form-label">Nome Completo</eabel>
-                        <input type="text" class="form-control" id="nome_usuario" name="nome_usuario" 
-                               placeholder="Ex: Maria Souza" required>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                        <div class="form-floating flex-grow-1">
+                            <input type="text" class="form-control" id="nome_usuario" name="nome_usuario" placeholder="Nome Completo" required>
+                            <label for="nome_usuario">Nome Completo</label>
+                        </div>
                     </div>
 
-                    <!-- Campo Email -->
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email"
-                                  placeholder="Ex: maria.souza@empresa.com" required>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                        <div class="form-floating flex-grow-1">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                        <div class="form-floating flex-grow-1">
+                            <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha" required>
+                            <label for="senha">Senha</label>
+                        </div>
                     </div>
 
-                    <!-- Campo Senha -->
-                    <div class="mb-3">
-                        <label for="senha" class="form-label">Senha</label>
-                        <input type="password" class="form-control" id="senha" name="senha" required>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-briefcase-fill"></i></span>
+                        <div class="form-floating flex-grow-1">
+                            <input type="text" class="form-control" id="cargo" name="cargo" placeholder="Cargo" required>
+                            <label for="cargo">Cargo</label>
+                        </div>
                     </div>
 
-                    <!-- Campo Cargo -->
-                    <div class="mb-3">
-                        <label for="cargo" class="form-label">Cargo</label>
-                        <input type="text" class="form-control" id="cargo" name="cargo"
-                                  placeholder="Ex: Técnica de Suporte N1" required>
-                    </div>
-
-                    <!-- Campo Nível de Acesso -->
-                    <div class="mb-3">
-                        <label for="nivel_acesso" class="form-label">Nível de Acesso</label>
+                    <div class="form-floating mb-4">
                         <select class="form-select" id="nivel_acesso" name="nivel_acesso" required>
                             <option value="Técnico" selected>Técnico</option>
                             <option value="Administrador">Administrador</option>
                         </select>
+                        <label for="nivel_acesso">Nível de Acesso</label>
                     </div>
 
                     <hr>
 
-                    <!-- Botões de Ação -->
                     <div class="d-flex justify-content-end">
-                        <a href="{{ url_for('listar_usuarios') }}" class="btn btn-secondary me-2">Cancelar</a>
-                        <button type="submit" class="btn btn-primary">Cadastrar Usuário</button>
+                        <a href="{{ url_for('listar_usuarios') }}" class="btn btn-secondary me-2">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle-fill"></i> Cadastrar Usuário
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-
     </div>
 </div>
-{% endblock %}```
+{% endblock %}

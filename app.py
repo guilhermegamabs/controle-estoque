@@ -25,7 +25,7 @@ with app.app_context():
 def dashboard():
     estatisticas = database.obter_estatisticas()
     ultimas_movimentacoes = database.listar_ultimas_movimentacoes()
-    return render_template('dashboard.html', stats=estatisticas, ultimas_movimentacoes=ultimas_movimentacoes)
+    return render_template('dashboard.html', stats=estatisticas, ultimas_movimentacoes=ultimas_movimentacoes, active_page='dashboard')
 
 # --- ROTA DE LOGIN
 @app.route('/login', methods=['GET', 'POST'])
@@ -45,7 +45,7 @@ def login():
             else:
                 flash('Email ou senha inválidos.', 'danger')
 
-    return render_template('login.html')
+    return render_template('login.html', active_page='dashboard')
 
 @app.route('/logout')
 def logout():
@@ -59,7 +59,7 @@ def logout():
 @login_required
 def listar_equipamentos():
     lista_de_equipamentos = database.listar_equipamentos()
-    return render_template('equipamentos.html', equipamentos=lista_de_equipamentos)
+    return render_template('equipamentos.html', equipamentos=lista_de_equipamentos, active_page='dashboard')
 
 @app.route('/equipamentos/novo', methods=['GET', 'POST'])
 @login_required
@@ -73,7 +73,7 @@ def novo_equipamento():
         flash(f"Equipamento '{nome}' cadastrado com sucesso!", 'success')
         return redirect(url_for('listar_equipamentos'))
     
-    return render_template('adicionar_equipamento.html')
+    return render_template('adicionar_equipamento.html', active_page='dashboard')
 
 @app.route('/equipamentos/editar/<int:id_equipamento>', methods=['GET', 'POST'])
 @login_required
@@ -92,7 +92,7 @@ def editar_equipamento(id_equipamento):
         flash('Equipamento atualizado com sucesso!', 'success')
         return redirect(url_for('listar_equipamentos'))
 
-    return render_template('editar_equipamento.html', equipamento=equipamento)
+    return render_template('editar_equipamento.html', equipamento=equipamento, active_page='dashboard')
 
 @app.route('/equipamentos/excluir/<int:id_equipamento>', methods=['POST'])
 @login_required
@@ -107,7 +107,7 @@ def excluir_equipamento_rota(id_equipamento):
 @login_required
 def listar_usuarios():
     lista_de_usuarios = database.listar_usuarios()
-    return render_template('usuarios.html', usuarios=lista_de_usuarios)
+    return render_template('usuarios.html', usuarios=lista_de_usuarios, active_page='dashboard')
 
 @app.route('/usuarios/novo', methods=['GET', 'POST'])
 @login_required
@@ -123,7 +123,7 @@ def novo_usuario():
         flash(f"Usuário '{nome}' cadastrado com sucesso!", 'success')
         return redirect(url_for('listar_usuarios'))
     
-    return render_template('adicionar_usuario.html')
+    return render_template('adicionar_usuario.html', active_page='dashboard')
 
 @app.route('/usuarios/editar/<int:id_usuario>', methods=['GET', 'POST'])
 @login_required
@@ -144,7 +144,7 @@ def editar_usuario(id_usuario):
         flash('Usuário atualizado com sucesso!', 'success')
         return redirect(url_for('listar_usuarios'))
 
-    return render_template('editar_usuario.html', usuario=usuario)
+    return render_template('editar_usuario.html', usuario=usuario, active_page='dashboard')
 
 @app.route('/usuarios/excluir/<int:id_usuario>', methods=['POST'])
 @login_required
@@ -159,7 +159,7 @@ def excluir_usuario_rota(id_usuario):
 @login_required
 def listar_movimentacoes():
     movimentacoes_abertas = database.listar_movimentacoes_abertas()
-    return render_template('movimentacoes.html', movimentacoes=movimentacoes_abertas)
+    return render_template('movimentacoes.html', movimentacoes=movimentacoes_abertas, active_page='dashboard')
 
 @app.route('/movimentacoes/retirada', methods=['GET', 'POST'])
 @login_required
@@ -181,7 +181,7 @@ def registrar_retirada():
 
     equipamentos = database.listar_equipamentos()
     usuarios = database.listar_usuarios()
-    return render_template('registrar_retirada.html', equipamentos=equipamentos, usuarios=usuarios)
+    return render_template('registrar_retirada.html', equipamentos=equipamentos, usuarios=usuarios, active_page='dashboard')
 
 @app.route('/movimentacoes/devolver/<int:id_movimentacao>', methods=['POST'])
 @login_required
