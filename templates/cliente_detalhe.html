@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Cliente{% endblock %}
+
+{% block content %}
+    <!-- Card com as Informações do Cliente -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h1 class="h4 mb-0"><i class="bi bi-building"></i> Detalhes do Cliente</h1>
+        </div>
+        <div class="card-body">
+            <h2 class="card-title">{{ cliente.nome_cliente }}</h2>
+            <p class="card-text text-muted"><strong>Contato:</strong> {{ cliente.contato or 'Não informado' }}</p>
+        </div>
+    </div>
+
+    <!-- Card com o Histórico de Movimentações -->
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h2 class="h5 mb-0"><i class="bi bi-clock-history"></i> Histórico de Reparos</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Equipamento</th>
+                        <th>Qtd.</th>
+                        <th>Data de Saída</th>
+                        <th>Data de Devolução</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mov in movimentacoes %}
+                    <tr>
+                        <td>{{ mov['nome_equipamento'] }}</td>
+                        <td>{{ mov['quantidade_retirada'] }}</td>
+                        <td>{{ mov.data_retirada.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>
+                            {% if mov.data_devolucao %}
+                                {{ mov.data_devolucao.strftime('%d/%m/%Y %H:%M') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if mov.data_devolucao %}
+                                <span class="badge bg-success">Devolvido</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Em Reparo</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">Nenhuma movimentação registrada para este cliente.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Botão para Voltar -->
+    <div class="mt-4">
+        <a href="{{ url_for('listar_clientes') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar para a Lista de Clientes
+        </a>
+    </div>
+{% endblock %}

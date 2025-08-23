@@ -1,0 +1,48 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Cadastrar Novo Cliente{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h2 class="h5 mb-0"><i class="bi bi-building"></i> Cadastrar Novo Cliente</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <!-- Nome do Cliente -->
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                        <div class="form-floating flex-grow-1">
+                            <input type="text" class="form-control" id="nome_cliente" name="nome_cliente" placeholder="Nome do Cliente" required>
+                            <label for="nome_cliente">Nome do Cliente</label>
+                        </div>
+                    </div>
+
+                    <!-- Contato -->
+                    <div class="input-group mb-4">
+                        <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                        <div class="form-floating flex-grow-1">
+                            <input type="text" class="form-control" id="contato" name="contato" placeholder="Contato (Telefone, Email, etc.)">
+                            <label for="contato">Contato (Opcional)</label>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ url_for('listar_clientes') }}" class="btn btn-secondary me-2">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle-fill"></i> Cadastrar Cliente
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -7,10 +7,20 @@
     <div class="col-md-8">
         <div class="card shadow-sm">
             <div class="card-header">
-                <h2 class="h5 mb-0"><i class="bi bi-box-arrow-up"></i> Registrar Nova Retirada</h2>
+                <h2 class="h5 mb-0"><i class="bi bi-box-arrow-up"></i> Registrar Saída para Reparo</h2>
             </div>
             <div class="card-body">
                 <form method="POST">
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="id_cliente" name="id_cliente" required>
+                            <option value="" disabled selected>Selecione um cliente...</option>
+                            {% for cliente in clientes %}
+                                <option value="{{ cliente['id_cliente'] }}">{{ cliente['nome_cliente'] }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="id_cliente">Cliente</label>
+                    </div>
+
                     <div class="form-floating mb-3">
                         <select class="form-select" id="id_equipamento" name="id_equipamento" required>
                             <option value="" disabled selected>Selecione um equipamento...</option>
@@ -32,7 +42,7 @@
                                 <option value="{{ user['id_usuario'] }}">{{ user['nome_usuario'] }}</option>
                             {% endfor %}
                         </select>
-                        <label for="id_usuario">Técnico Responsável</label>
+                        <label for="id_usuario">Técnico Responsável (Usuário do Sistema)</label>
                     </div>
 
                     <div class="input-group mb-3">
@@ -40,14 +50,14 @@
                         <div class="form-floating flex-grow-1">
                             <input type="number" class="form-control" id="quantidade_retirada" name="quantidade_retirada" 
                                    placeholder="Quantidade" required min="1" value="1">
-                            <label for="quantidade_retirada">Quantidade a ser Retirada</label>
+                            <label for="quantidade_retirada">Quantidade</label>
                         </div>
                     </div>
 
                     <div class="form-floating mb-4">
                         <textarea class="form-control" id="observacao" name="observacao" 
                                   placeholder="Observações (Opcional)" style="height: 100px"></textarea>
-                        <label for="observacao">Observações (Opcional)</label>
+                        <label for="observacao">Observações (Defeito, etc.)</label>
                     </div>
 
                     <hr>
@@ -57,7 +67,7 @@
                             <i class="bi bi-x-circle"></i> Cancelar
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle-fill"></i> Confirmar Retirada
+                            <i class="bi bi-check-circle-fill"></i> Confirmar Saída
                         </button>
                     </div>
                 </form>

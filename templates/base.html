@@ -61,6 +61,14 @@
             </li>
             <li class="nav-item">
               <a
+                class="nav-link {% if active_page == 'clientes' %}active{% endif %}"
+                href="{{ url_for('listar_clientes') }}"
+              >
+                <i class="bi bi-building"></i> Clientes
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
                 class="nav-link {% if active_page == 'movimentacoes' %}active{% endif %}"
                 href="{{ url_for('listar_movimentacoes') }}"
               >

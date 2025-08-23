@@ -41,13 +41,22 @@ def criar_tabelas():
             id_movimentacao INTEGER PRIMARY KEY AUTOINCREMENT,
             id_equipamento INTEGER NOT NULL,
             id_usuario INTEGER NOT NULL,
+            id_cliente INTEGER NOT NULL,
             data_retirada DATETIME NOT NULL,
             quantidade_retirada INTEGER NOT NULL,
             data_devolucao DATETIME,
             observacao TEXT,
             FOREIGN KEY(id_equipamento) REFERENCES equipamentos(id_equipamento),
-            FOREIGN KEY(id_usuario) REFERENCES usuarios(id_usuario)
+            FOREIGN KEY(id_usuario) REFERENCES usuarios(id_usuario),
+            FOREIGN KEY(id_cliente) REFERENCES clientes(id_cliente)
         )                      
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS clientes (
+            id_cliente INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome_cliente TEXT NOT NULL,
+            contato TEXT
+        )
     ''')
     conn.commit()
     conn.close()
@@ -234,36 +243,70 @@ def listar_movimentacoes_abertas():
         cursor = conn.cursor()
         cursor.execute('''
             SELECT
-                m.id_movimentacao,
-                m.data_retirada,
-                m.quantidade_retirada,
-                e.nome_equipamento,
-                u.nome_usuario
+                m.id_movimentacao, m.data_retirada, m.quantidade_retirada,
+                e.nome_equipamento, u.nome_usuario, c.nome_cliente
             FROM movimentacoes m
             JOIN equipamentos e ON m.id_equipamento = e.id_equipamento
             JOIN usuarios u ON m.id_usuario = u.id_usuario
+            JOIN clientes c ON m.id_cliente = c.id_cliente
             WHERE m.data_devolucao IS NULL
             ORDER BY m.data_retirada DESC
         ''')
-        movimentacoes = cursor.fetchall()
-        return movimentacoes
+        return cursor.fetchall()
     except sqlite3.Error as e:
         print(f"Erro ao listar movimentações abertas: {e}")
         return []
     finally:
         if conn:
             conn.close()
+            
+def listar_movimentacoes_por_cliente(id_cliente):
+    conn = None
+    try:
+        conn = conectar()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT m.data_retirada, m.data_devolucao, m.quantidade_retirada, m.observacao, e.nome_equipamento
+            FROM movimentacoes m
+            JOIN equipamentos e ON m.id_equipamento = e.id_equipamento
+            WHERE m.id_cliente = ?
+            ORDER BY m.data_retirada DESC
+        ''', (id_cliente,))
+        
+        resultados = cursor.fetchall()
+        
+        movimentacoes_processadas = []
+        for mov in resultados:
+            mov_dict = dict(mov) 
+            
+            if isinstance(mov_dict.get('data_retirada'), str):
+                mov_dict['data_retirada'] = datetime.fromisoformat(mov_dict['data_retirada'])
+            
+            if isinstance(mov_dict.get('data_devolucao'), str):
+                mov_dict['data_devolucao'] = datetime.fromisoformat(mov_dict['data_devolucao'])
+                
+            movimentacoes_processadas.append(mov_dict)
+            
+        return movimentacoes_processadas
 
-def registrar_retirada(id_equipamento, id_usuario, quantidade, observacao):
+    except sqlite3.Error as e:
+        print(f"Erro ao listar movimentações por cliente: {e}")
+        return []
+    finally:
+        if conn:
+            conn.close()
+
+def registrar_retirada(id_equipamento, id_usuario, id_cliente, quantidade, observacao):
     conn = None
     try:
         conn = conectar()
         cursor = conn.cursor()
         data_atual = obter_hora_atual()
         cursor.execute('''
-            INSERT INTO movimentacoes (id_equipamento, id_usuario, quantidade_retirada, observacao, data_retirada)
-            VALUES (?, ?, ?, ?, ?)
-        ''', (id_equipamento, id_usuario, quantidade, observacao, data_atual))
+            INSERT INTO movimentacoes (id_equipamento, id_usuario, id_cliente, quantidade_retirada, observacao, data_retirada)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (id_equipamento, id_usuario, id_cliente, quantidade, observacao, data_atual))
         cursor.execute('''
             UPDATE equipamentos
             SET quantidade_estoque = quantidade_estoque - ?
@@ -273,7 +316,7 @@ def registrar_retirada(id_equipamento, id_usuario, quantidade, observacao):
     except sqlite3.Error as e:
         print(f"Erro ao registrar retirada: {e}")
         if conn:
-            conn.rollback() 
+            conn.rollback()
     finally:
         if conn:
             conn.close()
@@ -383,3 +426,51 @@ def listar_ultimas_movimentacoes(limite=5):
     finally:
         if conn:
             conn.close()
+            
+# Em db.py
+
+def adicionar_cliente(nome, contato):
+    conn = None
+    try:
+        conn = conectar()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO clientes (nome_cliente, contato) VALUES (?, ?)
+        ''', (nome, contato))
+        conn.commit()
+    except sqlite3.Error as e:
+        print(f"Erro ao adicionar cliente: {e}")
+    finally:
+        if conn:
+            conn.close()
+
+def listar_clientes():
+    conn = None
+    try:
+        conn = conectar()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM clientes ORDER BY nome_cliente")
+        return cursor.fetchall()
+    except sqlite3.Error as e:
+        print(f"Erro ao listar clientes: {e}")
+        return []
+    finally:
+        if conn:
+            conn.close()
+
+def obter_cliente_por_id(id_cliente):
+    conn = None
+    try:
+        conn = conectar()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM clientes WHERE id_cliente = ?", (id_cliente,))
+        return cursor.fetchone()
+    except sqlite3.Error as e:
+        print(f"Erro ao obter cliente: {e}")
+        return None
+    finally:
+        if conn:
+            conn.close()
+
