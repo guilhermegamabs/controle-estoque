@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-
 {% block title %}Registrar Nova Retirada{% endblock %}
-
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
@@ -11,19 +9,30 @@
             </div>
             <div class="card-body">
                 <form method="POST">
-                    <div class="form-floating mb-3">
-                        <select class="form-select" id="id_cliente" name="id_cliente" required>
-                            <option value="" disabled selected>Selecione um cliente...</option>
-                            {% for cliente in clientes %}
-                                <option value="{{ cliente['id_cliente'] }}">{{ cliente['nome_cliente'] }}</option>
-                            {% endfor %}
-                        </select>
-                        <label for="id_cliente">Cliente</label>
+                    <div class="row">
+                        <div class="col-md-6 form-floating mb-3">
+                            <select class="form-select" id="id_cliente" name="id_cliente" required>
+                                <option value="" disabled selected>Selecione um cliente...</option>
+                                {% for cliente in clientes %}
+                                    <option value="{{ cliente['id_cliente'] }}">{{ cliente['nome_cliente'] }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="id_cliente" class="ms-2">Cliente</label>
+                        </div>
+                        <div class="col-md-6 form-floating mb-3">
+                            <select class="form-select" id="id_usuario" name="id_usuario" required>
+                                <option value="" disabled selected>Selecione um técnico...</option>
+                                {% for user in usuarios %}
+                                    <option value="{{ user['id_usuario'] }}">{{ user['nome_usuario'] }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="id_usuario" class="ms-2">Técnico Responsável</label>
+                        </div>
                     </div>
 
-                    <div class="form-floating mb-3">
-                        <select class="form-select" id="id_equipamento" name="id_equipamento" required>
-                            <option value="" disabled selected>Selecione um equipamento...</option>
+                    <div class="mb-3">
+                        <label for="id_equipamentos" class="form-label">Equipamentos (selecione um ou mais)</label>
+                        <select class="form-select select2" id="id_equipamentos" name="id_equipamentos" multiple="multiple" required>
                             {% for eq in equipamentos %}
                                 {% if eq['quantidade_estoque'] > 0 %}
                                     <option value="{{ eq['id_equipamento'] }}">
@@ -32,43 +41,16 @@
                                 {% endif %}
                             {% endfor %}
                         </select>
-                        <label for="id_equipamento">Equipamento</label>
-                    </div>
-
-                    <div class="form-floating mb-3">
-                        <select class="form-select" id="id_usuario" name="id_usuario" required>
-                            <option value="" disabled selected>Selecione um técnico...</option>
-                            {% for user in usuarios %}
-                                <option value="{{ user['id_usuario'] }}">{{ user['nome_usuario'] }}</option>
-                            {% endfor %}
-                        </select>
-                        <label for="id_usuario">Técnico Responsável (Usuário do Sistema)</label>
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <span class="input-group-text"><i class="bi bi-box"></i></span>
-                        <div class="form-floating flex-grow-1">
-                            <input type="number" class="form-control" id="quantidade_retirada" name="quantidade_retirada" 
-                                   placeholder="Quantidade" required min="1" value="1">
-                            <label for="quantidade_retirada">Quantidade</label>
-                        </div>
                     </div>
 
                     <div class="form-floating mb-4">
-                        <textarea class="form-control" id="observacao" name="observacao" 
-                                  placeholder="Observações (Opcional)" style="height: 100px"></textarea>
+                        <textarea class="form-control" id="observacao" name="observacao" placeholder="Observações" style="height: 100px"></textarea>
                         <label for="observacao">Observações (Defeito, etc.)</label>
                     </div>
-
                     <hr>
-
                     <div class="d-flex justify-content-end">
-                        <a href="{{ url_for('listar_movimentacoes') }}" class="btn btn-secondary me-2">
-                            <i class="bi bi-x-circle"></i> Cancelar
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle-fill"></i> Confirmar Saída
-                        </button>
+                        <a href="{{ url_for('listar_movimentacoes') }}" class="btn btn-secondary me-2"><i class="bi bi-x-circle"></i> Cancelar</a>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle-fill"></i> Confirmar Saída</button>
                     </div>
                 </form>
             </div>

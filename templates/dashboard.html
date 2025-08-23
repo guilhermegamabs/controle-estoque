@@ -5,34 +5,43 @@
 {% block content %}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Dashboard</h1>
-        <a href="{{ url_for('registrar_retirada') }}" class="btn btn-primary btn-lg">
-            + Registrar Nova Retirada
+        <a href="{{ url_for('registrar_retirada') }}" class="btn btn-primary btn-lg shadow-sm">
+            <i class="bi bi-plus-circle-fill"></i> Registrar Nova Retirada
         </a>
     </div>
 
-    <!-- Cards de Estatísticas -->
+    <!-- Cards de Estatísticas com Ícones -->
     <div class="row">
         <div class="col-md-4 mb-4">
-            <div class="card text-white bg-primary shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Equipamentos em Uso</h5>
-                    <p class="card-text display-4">{{ stats.em_uso }}</p>
+            <div class="card text-white bg-primary shadow h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Equipamentos em Uso</h5>
+                        <p class="card-text display-4">{{ stats.em_uso }}</p>
+                    </div>
+                    <i class="bi bi-tools" style="font-size: 4rem; opacity: 0.5;"></i>
                 </div>
             </div>
         </div>
         <div class="col-md-4 mb-4">
-            <div class="card text-white bg-success shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Total de Equipamentos</h5>
-                    <p class="card-text display-4">{{ stats.total_equipamentos }}</p>
+            <div class="card text-white bg-success shadow h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Total de Equipamentos</h5>
+                        <p class="card-text display-4">{{ stats.total_equipamentos }}</p>
+                    </div>
+                    <i class="bi bi-hdd-stack-fill" style="font-size: 4rem; opacity: 0.5;"></i>
                 </div>
             </div>
         </div>
         <div class="col-md-4 mb-4">
-            <div class="card text-white bg-info shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Usuários Cadastrados</h5>
-                    <p class="card-text display-4">{{ stats.total_usuarios }}</p>
+            <div class="card text-white bg-info shadow h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Clientes Cadastrados</h5>
+                        <p class="card-text display-4">{{ stats.total_usuarios }}</p>
+                    </div>
+                    <i class="bi bi-building" style="font-size: 4rem; opacity: 0.5;"></i>
                 </div>
             </div>
         </div>
@@ -40,39 +49,43 @@
 
     <!-- Acessos Rápidos e Últimas Atividades -->
     <div class="row">
-        <!-- Coluna da Esquerda: Acessos Rápidos -->
         <div class="col-md-4">
             <div class="card shadow-sm">
                 <div class="card-header">
                     <h2 class="h5 mb-0">Acessos Rápidos</h2>
                 </div>
                 <div class="list-group list-group-flush">
-                    <a href="{{ url_for('listar_movimentacoes') }}" class="list-group-item list-group-item-action">Painel de Movimentações</a>
-                    <a href="{{ url_for('listar_equipamentos') }}" class="list-group-item list-group-item-action">Gerenciar Equipamentos</a>
-                    <a href="{{ url_for('listar_usuarios') }}" class="list-group-item list-group-item-action">Gerenciar Usuários</a>
+                    <a href="{{ url_for('listar_movimentacoes') }}" class="list-group-item list-group-item-action"><i class="bi bi-arrow-left-right me-2"></i>Painel de Movimentações</a>
+                    <a href="{{ url_for('listar_equipamentos') }}" class="list-group-item list-group-item-action"><i class="bi bi-hdd-stack-fill me-2"></i>Gerenciar Equipamentos</a>
+                    <a href="{{ url_for('listar_usuarios') }}" class="list-group-item list-group-item-action"><i class="bi bi-people-fill me-2"></i>Gerenciar Usuários</a>
+                    <a href="{{ url_for('listar_clientes') }}" class="list-group-item list-group-item-action"><i class="bi bi-building me-2"></i>Gerenciar Clientes</a>
                 </div>
             </div>
         </div>
 
-        <!-- Coluna da Direita: Últimas Atividades -->
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-header">
                     <h2 class="h5 mb-0">Últimas Atividades</h2>
                 </div>
                 <div class="card-body">
-                    <table class="table table-sm table-hover">
+                    <table class="table table-sm table-hover mb-0">
                         <tbody>
                             {% for mov in ultimas_movimentacoes %}
                             <tr>
-                                <td>
+                                <td style="width: 10%;">
                                     {% if mov.tipo_movimentacao == 'Retirada' %}
                                         <span class="badge bg-warning text-dark">Retirada</span>
                                     {% else %}
                                         <span class="badge bg-success">Devolução</span>
                                     {% endif %}
                                 </td>
-                                <td><strong>{{ mov.nome_equipamento }}</strong> por {{ mov.nome_usuario }}</td>
+                                <td>
+                                    <strong>{{ mov.nome_equipamento }}</strong> para 
+                                    <a href="{{ url_for('cliente_detalhe', id_cliente=mov.id_cliente) }}" class="link-dark fw-bold">
+                                        {{ mov.nome_cliente }}
+                                    </a>
+                                </td>
                                 <td class="text-end text-muted">{{ mov.data_ordenacao.strftime('%d/%m/%Y %H:%M') }}</td>
                             </tr>
                             {% else %}

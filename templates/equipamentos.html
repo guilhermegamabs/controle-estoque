@@ -27,7 +27,7 @@
                 <td>{{ equipamento['nome_equipamento'] }}</td>
                 <td>{{ equipamento['descricao_equipamento'] }}</td>
                 <td>{{ equipamento['quantidade_estoque'] }}</td>
-                <td>{{ equipamento['data_cadastro'] }}</td>
+                <td>{{ equipamento.data_cadastro.strftime('%d/%m/%Y %H:%M') }}</td>
                 <td class="text-center">
                     <a href="{{ url_for('editar_equipamento', id_equipamento=equipamento['id_equipamento']) }}" class="btn btn-warning btn-sm">Editar</a>
                     <form action="{{ url_for('excluir_equipamento_rota', id_equipamento=equipamento['id_equipamento']) }}" method="POST" class="d-inline">
